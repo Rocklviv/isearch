@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"encoding/json"
 	"io/ioutil"
-	//"github.com/olekukonko/tablewriter"
 	"github.com/olekukonko/tablewriter"
 	"os"
 )
@@ -87,7 +86,10 @@ type Pull_requests []struct {
 
 var repo = flag.String("repo", "", "Name of project to search.")
 var issue = flag.String("issue", "", "Specify issue that you are looking for.")
-
+//
+// Creates default repository array where repository names are stored.
+// TODO: Create a method that allows to read a repository list from configuration file.
+//
 func _set_repositories() []repositories {
 	v := []repositories{
 		{
@@ -102,6 +104,9 @@ func _set_repositories() []repositories {
 	return v
 }
 
+//
+// Methods that implements search issues in repository
+//
 func _search() {
 	r := *repo
 	i := *issue
@@ -121,24 +126,35 @@ func _search() {
 			resp, _ := client.Do(req)
 			body, err := ioutil.ReadAll(resp.Body)
 			defer resp.Body.Close()
-			data := print_results(body)
-			render_table(data)
+			print_results(body)
 		}
 	}
 }
 
-func print_results(body []byte) [][]string {
+//
+// Method prints table results to stdout.
+//
+func print_results(body []byte) {
 	var i Issues
 	err := json.Unmarshal(body, &i)
 	if err != nil {
 		fmt.Println("[ERROR] Cannot unmarshal data. %s", err)
 	}
+	data := [][]string{}
 	for _, value := range i.Items {
-		data := [][]string{
-			[]string{value.Title, value.State, value.Html_url},
-		}
-		return data
+		issue_value := []string{value.Title, value.State, value.Html_url}
+		data = append(data, issue_value)
 	}
+	fmt.Println(data)
+	// Creating table for stdout.
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetHeader([]string{"Title", "State", "URL"})
+
+	for _, v := range data {
+		table.Append(v)
+	}
+	table.SetRowLine(true)
+	table.Render()
 }
 
 func main() {
