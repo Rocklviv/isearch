@@ -16,72 +16,72 @@ type repositories struct {
 }
 
 type Issues struct {
-	TotalCount int `json:"total_count"`
-	IncompleteResults bool `json:"incomplete_results"`
-	Items Items `json:"items"`
+	TotalCount 			int 			`json:"total_count"`
+	IncompleteResults 	bool 			`json:"incomplete_results"`
+	Items 				Items 			`json:"items"`
 }
 
 type Items []struct{
-	Url string `json:"url"`
-	Repository_url string `json:"repository_url"`
-	Labels_url	string `json:"labels_url"`
-	Comments_url string `json:"comments_url"`
-	Events_url string `json:"events_url"`
-	Html_url string `json:"html_url"`
-	Id int `json:"id"`
-	Number int `json:"number"`
-	Title string `json:"title"`
-	User User `json:"user"`
-	Labels Labels `json:"labels"`
-	State string `json:"state"`
-	Locked bool `json:"locked"`
-	Assignee string `json:"assignee"`
-	Assignees Assignees `json:"assignees"`
-	Milestone string `json:"milestone"`
-	Comments int `json:"comments"`
-	Created_at string `json:"create_at"`
-	Updated_at string `json:"update_at"`
-	Closed_at string `json:"closed_at"`
-	Author_association string `json:"author_association"`
-	Pull_requests Pull_requests `json:"pull_requests"`
-	Body string `json:"body"`
-	Score float32 `json:"score"`
+	Url 				string 			`json:"url"`
+	Repository_url 		string 			`json:"repository_url"`
+	Labels_url			string 			`json:"labels_url"`
+	Comments_url 		string 			`json:"comments_url"`
+	Events_url 			string 			`json:"events_url"`
+	Html_url 			string 			`json:"html_url"`
+	Id 					int 			`json:"id"`
+	Number 				int 			`json:"number"`
+	Title 				string			`json:"title"`
+	User 				User 			`json:"user"`
+	Labels 				Labels			`json:"labels"`
+	State 				string 			`json:"state"`
+	Locked				bool 			`json:"locked"`
+	Assignee 			string 			`json:"assignee"`
+	Assignees 			Assignees 		`json:"assignees"`
+	Milestone 			string 			`json:"milestone"`
+	Comments 			int 			`json:"comments"`
+	Created_at 			string 			`json:"create_at"`
+	Updated_at 			string			`json:"update_at"`
+	Closed_at 			string 			`json:"closed_at"`
+	Author_association 	string 			`json:"author_association"`
+	Pull_requests 		Pull_requests 	`json:"pull_requests"`
+	Body 				string 			`json:"body"`
+	Score 				float32 		`json:"score"`
 }
 
 type User struct {
-	Login string `json:"login"`
-	Id int `json:"id"`
-	Avatar_url string `json:"avatar_url"`
-	Gravatar_id string `json:"gravatar_id"`
-	Url string `json:"url"`
-	Html_url string `json:"html_url"`
-	Followers_url string `json:"followers_url"`
-	Following_url string `json:"following_url"`
-	Gists_url string `json:"gists_url"`
-	Starred_url string `json:"starred_url"`
-	Subscribtions_url string `json:"subscribtions_url"`
-	Organizations_url string `json:"organizations_url"`
-	Repos_url string `json:"repos_url"`
-	Events_url string `json:"events_url"`
-	Received_events_url string `json:"received_events_url"`
-	Type string `json:"type"`
-	Site_admin bool `json:"site_admin"`
+	Login 				string 			`json:"login"`
+	Id 					int 			`json:"id"`
+	Avatar_url 			string 			`json:"avatar_url"`
+	Gravatar_id 		string 			`json:"gravatar_id"`
+	Url 				string 			`json:"url"`
+	Html_url 			string 			`json:"html_url"`
+	Followers_url 		string 			`json:"followers_url"`
+	Following_url 		string 			`json:"following_url"`
+	Gists_url 			string 			`json:"gists_url"`
+	Starred_url 		string 			`json:"starred_url"`
+	Subscribtions_url 	string 			`json:"subscribtions_url"`
+	Organizations_url 	string 			`json:"organizations_url"`
+	Repos_url 			string 			`json:"repos_url"`
+	Events_url 			string 			`json:"events_url"`
+	Received_events_url string 			`json:"received_events_url"`
+	Type 				string 			`json:"type"`
+	Site_admin 			bool 			`json:"site_admin"`
 }
 
 type Labels []struct {
-	Id int `json:"id"`
-	Url string `json:"url"`
-	Name string `json:"name"`
-	Color string `json:"color"`
-	Default bool `json:"default"`
+	Id 					int 			`json:"id"`
+	Url 				string 			`json:"url"`
+	Name 				string 			`json:"name"`
+	Color 				string 			`json:"color"`
+	Default 			bool 			`json:"default"`
 }
 
 type Assignees []struct {}
 type Pull_requests []struct {
-	Url string `json:"url"`
-	Html_url string `json:"html_url"`
-	Diff_url string `json:"diff_url"`
-	Patch_url string `json:"patch_url"`
+	Url 				string 			`json:"url"`
+	Html_url 			string 			`json:"html_url"`
+	Diff_url 			string 			`json:"diff_url"`
+	Patch_url 			string 			`json:"patch_url"`
 }
 
 var repo = flag.String("repo", "", "Name of project to search.")
