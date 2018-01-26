@@ -145,7 +145,6 @@ func print_results(body []byte) {
 		issue_value := []string{value.Title, value.State, value.Html_url}
 		data = append(data, issue_value)
 	}
-	fmt.Println(data)
 	// Creating table for stdout.
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Title", "State", "URL"})
