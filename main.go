@@ -143,7 +143,7 @@ func printResults(body []byte) {
 	}
 	data := [][]string{}
 	for _, value := range i.Items {
-		if value.Score >= 1.000 {
+		if value.Score >= 0.500 {
 			score := strconv.FormatFloat(value.Score, 'f', 4, 32)
 			issueValue := []string{value.Title, value.State, value.HtmlUrl, score}
 			data = append(data, issueValue)
