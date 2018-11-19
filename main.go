@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"flag"
-	"net/http"
 	"encoding/json"
-	"io/ioutil"
+	"flag"
+	"fmt"
 	"github.com/olekukonko/tablewriter"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"strconv"
 )
@@ -87,6 +87,7 @@ type PullRequests []struct {
 
 var repo = flag.String("repo", "", "Name of project to search.")
 var issue = flag.String("issue", "", "Specify issue that you are looking for.")
+
 //
 // Creates default repository array where repository names are stored.
 // TODO: Create a method that allows to read a repository list from configuration file.
@@ -106,7 +107,7 @@ func setRepositories() []repositories {
 }
 
 //
-// Methods that implements search issues in repository
+// Method that implements search issues in repository
 //
 func search() {
 	r := *repo
@@ -139,7 +140,7 @@ func printResults(body []byte) {
 	var i Issues
 	err := json.Unmarshal(body, &i)
 	if err != nil {
-		fmt.Println("[ERROR] Cannot unmarshal data. %s", err)
+		fmt.Println("[ERROR] Cannot unmarshal data", err)
 	}
 	data := [][]string{}
 	for _, value := range i.Items {
