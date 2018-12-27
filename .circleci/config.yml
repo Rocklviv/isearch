@@ -9,6 +9,7 @@ jobs:
     steps:
       - checkout
       - run: |
+          make deps
           make test
       - run: |
           make build-multiarch
