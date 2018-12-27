@@ -20,3 +20,21 @@ jobs:
           tags:
             only:
               - /^v.*/
+          branches:
+            ignore:
+              - /.*/
+
+  deploy_artifact:
+    docker:
+      - image: "circleci/golang:1.11"
+    working_directory: "/go/src/github.com/rocklviv/isearch"
+      steps:
+        - checkout
+          - run: |
+              make deps
+              make test
+          - run: |
+              make build-multiarch
+          - run: |
+              go get -u github.com/tcnksm/ghr
+              ghr -t $GITHUB_TOKEN -u $GITHUB_USERNAME $CIRCLE_TAG /go/src/github.com/rocklviv/isearch/release
