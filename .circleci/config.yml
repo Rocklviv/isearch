@@ -30,11 +30,11 @@ jobs:
     working_directory: "/go/src/github.com/rocklviv/isearch"
     steps:
       - checkout
-        - run: |
-            make deps
-            make test
-        - run: |
-            make build-multiarch
-        - run: |
-            go get -u github.com/tcnksm/ghr
-            ghr -t $GITHUB_TOKEN -u $GITHUB_USERNAME $CIRCLE_TAG /go/src/github.com/rocklviv/isearch/release
+      - run: |
+          make deps
+          make test
+      - run: |
+          make build-multiarch
+      - run: |
+          go get -u github.com/tcnksm/ghr
+          ghr -t $GITHUB_TOKEN -u $GITHUB_USERNAME $CIRCLE_TAG /go/src/github.com/rocklviv/isearch/release
