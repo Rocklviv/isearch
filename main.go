@@ -88,10 +88,10 @@ type PullRequests []struct {
 
 var (
 	configFile = ".isearch.json"
+	apiUrl = "https://api.github.com/search/issues"
+	repo string
+	issue string
 )
-
-var repo = flag.String("repo", "", "Name of project to search.")
-var issue = flag.String("issue", "", "Specify issue that you are looking for.")
 
 //
 // Sets repository struct from configuration file or use default.
@@ -138,21 +138,19 @@ func setRepositories() ConfigurationFile {
 // Method that implements search issues in repository
 //
 func search() {
-	r := *repo
-	i := *issue
 	repos := setRepositories()
 
 	for key, value := range repos {
-		if repos[key].Name == r {
+		if repos[key].Name == repo {
 			client := &http.Client{}
 			repoName := value
-			req, err := http.NewRequest("GET", "https://api.github.com/search/issues", nil)
+			req, err := http.NewRequest("GET", apiUrl, nil)
 			if err != nil {
 				fmt.Println("[ERROR] Some issue with request.")
 			}
 
 			q := req.URL.Query()
-			q.Add("q", fmt.Sprintf("%s+repo:%s", i, repoName.Repo))
+			q.Add("q", fmt.Sprintf("%s+repo:%s", issue, repoName.Repo))
 			req.URL.RawQuery = q.Encode()
 			resp, _ := client.Do(req)
 			body, err := ioutil.ReadAll(resp.Body)
@@ -164,7 +162,7 @@ func search() {
 }
 
 //
-// Method prints table results to stdout.
+// Method prints results into table
 //
 func printResults(body []byte) {
 	var i Issues
@@ -193,7 +191,15 @@ func printResults(body []byte) {
 	table.Render()
 }
 
+func parseArgs() (*string, *string) {
+	flagRepo := flag.String("repo", "", "Name of project to search.")
+	flagIssue := flag.String("issue", "", "Specify issue that you are looking for.")
+	return flagRepo, flagIssue
+}
+
 func main() {
-	flag.Parse()
+	tmpRepo, tmpIssue := parseArgs()
+	repo = *tmpRepo
+	issue = *tmpIssue
 	search()
 }
