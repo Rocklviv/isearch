@@ -13,3 +13,10 @@ jobs:
           make test
       - run: |
           make build-multiarch
+      - deploy_artifact:
+        requires:
+          - build
+        filters:
+          tags:
+            only:
+              - /^v.*/
