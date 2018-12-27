@@ -1,4 +1,4 @@
-package main
+package isearch
 
 import (
 	"encoding/json"
@@ -88,9 +88,9 @@ type PullRequests []struct {
 
 var (
 	configFile = ".isearch.json"
-	apiUrl = "https://api.github.com/search/issues"
-	repo string
-	issue string
+	apiUrl     = "https://api.github.com/search/issues"
+	repo       string
+	issue      string
 )
 
 //

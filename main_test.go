@@ -1,12 +1,12 @@
-package main
+package isearch
 
 import (
-	"reflect"
-	"testing"
-	"net/http"
 	"fmt"
 	"io/ioutil"
+	"net/http"
 	"os"
+	"reflect"
+	"testing"
 )
 
 func TestSetRepositories(t *testing.T) {
@@ -39,7 +39,6 @@ func TestPassedArguments(t *testing.T) {
 func TestSearch(t *testing.T) {
 	search()
 }
-
 
 func TestPrintResult(t *testing.T) {
 	client := &http.Client{}
