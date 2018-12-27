@@ -8,12 +8,14 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"os/user"
+	"path/filepath"
 	"strconv"
 )
 
-type repositories struct {
-	name string
-	repo string
+type ConfigurationFile []struct {
+	Name string `json:"name"`
+	Repo string `json:"repo"`
 }
 
 type Issues struct {
@@ -36,8 +38,6 @@ type Items []struct {
 	Labels            Labels       `json:"labels"`
 	State             string       `json:"state"`
 	Locked            bool         `json:"locked"`
-	Assignee          string       `json:"assignee"`
-	Assignees         Assignees    `json:"assignees"`
 	Milestone         string       `json:"milestone"`
 	Comments          int          `json:"comments"`
 	CreatedAt         string       `json:"create_at"`
@@ -78,6 +78,7 @@ type Labels []struct {
 }
 
 type Assignees []struct{}
+
 type PullRequests []struct {
 	Url      string `json:"url"`
 	HtmlUrl  string `json:"html_url"`
@@ -85,25 +86,52 @@ type PullRequests []struct {
 	PatchUrl string `json:"patch_url"`
 }
 
+var (
+	configFile = ".isearch.json"
+)
+
 var repo = flag.String("repo", "", "Name of project to search.")
 var issue = flag.String("issue", "", "Specify issue that you are looking for.")
 
 //
-// Creates default repository array where repository names are stored.
-// TODO: Create a method that allows to read a repository list from configuration file.
+// Sets repository struct from configuration file or use default.
 //
-func setRepositories() []repositories {
-	repos := []repositories{
-		{
-			name: "terraform",
-			repo: "hashicorp/terraform",
-		},
-		{
-			name: "ansible",
-			repo: "ansible/ansible",
-		},
+func setRepositories() ConfigurationFile {
+	usr, _ := user.Current()
+	dir := usr.HomeDir
+	path := filepath.Join(dir, configFile)
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		fmt.Printf("[WARNING] File %s does not exists. Going to use default repo configuration. \r\n", path)
+		repos := ConfigurationFile{
+			{
+				Name: "terraform",
+				Repo: "hashicorp/terraform",
+			},
+			{
+				Name: "ansible",
+				Repo: "ansible/ansible",
+			},
+		}
+		return repos
+	} else {
+		jsonFile, err := os.Open(path)
+		if err != nil {
+			fmt.Printf("[ERROR] Cannot open %s. Check is file exists and have proper permissions. \r\n", path)
+			fmt.Printf("[ERROR] %s", err.Error())
+			os.Exit(1)
+		}
+		defer jsonFile.Close()
+		file, _ := ioutil.ReadAll(jsonFile)
+
+		var repos ConfigurationFile
+		errRead := json.Unmarshal(file, &repos)
+		if errRead != nil {
+			fmt.Printf("[ERROR] %s \r\n", errRead.Error())
+			os.Exit(2)
+		}
+		return repos
 	}
-	return repos
 }
 
 //
@@ -115,19 +143,21 @@ func search() {
 	repos := setRepositories()
 
 	for key, value := range repos {
-		if repos[key].name == r {
+		if repos[key].Name == r {
 			client := &http.Client{}
 			repoName := value
 			req, err := http.NewRequest("GET", "https://api.github.com/search/issues", nil)
 			if err != nil {
 				fmt.Println("[ERROR] Some issue with request.")
 			}
+
 			q := req.URL.Query()
-			q.Add("q", fmt.Sprintf("%s+repo:%s", i, repoName.repo))
+			q.Add("q", fmt.Sprintf("%s+repo:%s", i, repoName.Repo))
 			req.URL.RawQuery = q.Encode()
 			resp, _ := client.Do(req)
 			body, err := ioutil.ReadAll(resp.Body)
 			defer resp.Body.Close()
+
 			printResults(body)
 		}
 	}
@@ -159,7 +189,7 @@ func printResults(body []byte) {
 	}
 	table.SetRowLine(true)
 	total := strconv.Itoa(i.TotalCount)
-	table.SetFooter([]string{"", "", "Found total:", total})
+	table.SetFooter([]string{"", "", "Found issues:", total})
 	table.Render()
 }
 
